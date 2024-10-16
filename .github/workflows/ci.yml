@@ -4,6 +4,7 @@
 name: WildFly Client Config CI
 
 on:
+  workflow_dispatch:
   pull_request:
     types: [opened, synchronize, reopened, ready_for_review]
 
@@ -15,12 +16,12 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        os: [ubuntu-latest, windows-latest]
+        os: [ubuntu-22.04-ppc64le]
         jdk-distribution: [temurin, adopt-openj9]
         jdk-version: [11, 17, 21]
     steps:
     - name: Configure runner - Linux
-      if: contains(matrix.os, 'ubuntu')
+      if: contains(matrix.os, 'ubuntu-22.04-ppc64le')
       run: |
         sudo bash -c "echo '127.0.0.1   localhost localhost.localdomain localhost4 localhost4.localdomain4' > /etc/hosts"
         sudo bash -c "echo '::1         localhost localhost.localdomain localhost6 localhost6.localdomain6' >> /etc/hosts"
@@ -35,9 +36,12 @@ jobs:
       uses: actions/setup-java@v4
       with:
         distribution: ${{ matrix.jdk-distribution }}
+        architecture: ppc64le
         java-version: ${{ matrix.jdk-version }}
     - name: Run Tests
-      run: mvn -ntp -U -B -fae clean install
+      run: |
+        sudo apt install maven -y
+        mvn -ntp -U -B -fae clean install
     - uses: actions/upload-artifact@v4
       if: failure()
       with:
