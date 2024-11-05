@@ -36,7 +36,6 @@ jobs:
       uses: actions/setup-java@v4
       with:
         distribution: ${{ matrix.jdk-distribution }}
-        architecture: ppc64le
         java-version: ${{ matrix.jdk-version }}
     - name: Run Tests
       run: |
