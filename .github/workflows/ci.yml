@@ -16,16 +16,11 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        os: [ubuntu-22.04-ppc64le, ubuntu-22.04-lxd-selfhosted]
+        os: [ubuntu-22.04-lxd-selfhosted]
         jdk-distribution: [temurin, adopt-openj9]
         jdk-version: [11, 17, 21]
     steps:
     - name: Configure runner - Linux
-      if: contains(matrix.os, 'ubuntu-22.04-ppc64le') 
-      run: |
-        sudo bash -c "echo '127.0.0.1   localhost localhost.localdomain localhost4 localhost4.localdomain4' > /etc/hosts"
-        sudo bash -c "echo '::1         localhost localhost.localdomain localhost6 localhost6.localdomain6' >> /etc/hosts"
-    - name: Configure runner - Linux Selfhosted
       if: contains(matrix.os, 'ubuntu-22.04-lxd-selfhosted') 
       run: |
         sudo bash -c "echo '127.0.0.1   localhost localhost.localdomain localhost4 localhost4.localdomain4' > /etc/hosts"
